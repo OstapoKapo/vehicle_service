@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+[data-theme="light"] {
+  --background: 255 255 255;    /* Фон сторінки */
+  --foreground: 17 24 39;      /* Основний текст */
+  --card: 255 255 255;          /* Фон карток */
+  --card-foreground: 17 24 39;  /* Текст на картках */
+  --border: 229 231 235;        /* Бордери */
+  
+  /* Кнопка Primary */
+  --primary: 29 78 216;         /* Колір кнопки */
+  --primary-foreground: 255 255 255; /* Текст на кнопці */
+  --primary-hover: 30 64 175;   /* Ховер кнопки */
+
+  /* Кнопка Secondary */
+  --secondary: 243 244 246;      /* Фон кнопки */
+  --secondary-foreground: 55 65 81; /* Текст на кнопці */
+  --secondary-hover: 229 231 235; /* Ховер кнопки */
+  
+  /* Акцент (для посилань, іконок) */
+  --accent: 59 130 246;
+}
+
+
+[data-theme="dark"] {
+  --background: 0 0 0;         /* Фон сторінки */
+  --foreground: 243 244 246;    /* Основний текст */
+  --card: 17 24 39;             /* Фон карток */
+  --card-foreground: 243 244 246; /* Текст на картках */
+  --border: 55 65 81;           /* Бордери */
+
+  /* Кнопка Primary */
+  --primary: 59 130 246;        /* Колір кнопки */
+  --primary-foreground: 255 255 255; /* Текст на кнопці */
+  --primary-hover: 37 99 235;   /* Ховер кнопки */
+  
+  /* Кнопка Secondary */
+  --secondary: 55 65 81;        /* Фон кнопки */
+  --secondary-foreground: 243 244 246; /* Текст на кнопці */
+  --secondary-hover: 75 85 99;  /* Ховер кнопки */
+  
+  /* Акцент (для посилань, іконок) */
+  --accent: 96 165 250;
+}
+
+.bg-theme {
+  background-color: rgb(var(--background));
+}
+.text-theme {
+  color: rgb(var(--foreground));
+}
+.bg-card {
+  background-color: rgb(var(--card));
+}
+.text-card {
+  color: rgb(var(--card-foreground));
+}
+
+.text-primary {
+  color: rgb(var(--primary));
+}
+.bg-primary {
+  background-color: rgb(var(--primary));
+}
+.text-primary-foreground {
+  color: rgb(var(--primary-foreground));
+}
+/* Створимо клас для ховеру */
+.hover\:bg-primary-hover:hover {
+  background-color: rgb(var(--primary-hover));
+}
+
+.text-secondary {
+  color: rgb(var(--secondary-foreground));
+}
+.bg-secondary {
+  background-color: rgb(var(--secondary));
+}
+.hover\:bg-secondary-hover:hover {
+  background-color: rgb(var(--secondary-hover));
+}
+
+.text-accent {
+  color: rgb(var(--accent));
+}
+
+body{
+  font-family: var(--font-montserrat);
+  background-color: rgb(var(--background));
+}
