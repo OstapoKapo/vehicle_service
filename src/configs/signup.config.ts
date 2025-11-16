@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 
 export const registrationFormConfig: FormField[] = [
     {
-      name: "fisrtName",
+      name: "firstName",
       label: "First Name",
       type: "text",
       placeholder: "Enter your first name",
