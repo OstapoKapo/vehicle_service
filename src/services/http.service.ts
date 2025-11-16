@@ -1,5 +1,5 @@
-import type { IHttpClient } from '../types/services.types';
-import type { IHttpConfig, IMap, IResponse } from '../types/services.types';
+import type { IHttpClient } from '../types/services.type';
+import type { IHttpConfig, IMap, IResponse } from '../types/services.type';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000/api';
 

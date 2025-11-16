@@ -3,7 +3,7 @@
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="page">
       <p className="text-4xl text-theme">Welcome to the Vehicle Management System</p>
     </div>
   );
