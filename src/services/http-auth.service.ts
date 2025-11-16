@@ -1,6 +1,6 @@
 import type { HttpService } from './http.service';
 
-import type { IHttpConfig, IMap } from '../types/services.types';
+import type { IHttpConfig, IMap } from '../types/services.type';
 
 export class EnhancedWithAuthHttpService {
 	constructor(private readonly httpService: HttpService) {
