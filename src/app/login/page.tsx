@@ -1,14 +1,17 @@
 
 'use client';
 
+import { useLoginMutation } from "@/api/auth/auth.mutation";
 import { CustomForm } from "@/components/custom/customForm.component";
 import { loginFormConfig } from "@/configs/login.config";
+import { LoginRequest, LoginResponse } from "@/types/auth.type";
 import { FieldValues } from "react-hook-form";
 
 const LoginPage = () => {
+    const loginMutation = useLoginMutation();  
 
-    const handleLogin = async (data: FieldValues) => {
-        console.log('Login data:', data);
+    const handleLogin = async (data: LoginRequest) => {
+        await loginMutation.mutateAsync(data);
     };
 
     return (
@@ -17,9 +20,9 @@ const LoginPage = () => {
             <CustomForm
                 fields={loginFormConfig}
                 onSubmit={handleLogin}
-                submitText="Увійти"
+                submitText="Login"
             />
-            <p className="mt-10">Немає облікового запису? <a href="/signup" className="text-blue-500">Зареєструватися тут</a></p>
+            <p className="mt-10">Don't have an account? <a href="/signup" className="text-blue-500">Sign up here</a></p>
         </div>
     );
 }

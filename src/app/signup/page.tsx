@@ -1,14 +1,16 @@
 
 'use client';
 
+import { useSignupMutation } from "@/api/auth/auth.mutation";
 import { CustomForm } from "@/components/custom/customForm.component";
 import { registrationFormConfig } from "@/configs/signup.config";
-import { FieldValues } from "react-hook-form";
+import { SignupRequest } from "@/types/auth.type";
 
 const SignupPage = () => {
+    const signupMutation = useSignupMutation();
 
-    const handleSignup = async (data: FieldValues) => {
-        console.log('Signup data:', data);
+    const handleSignup = async (data: SignupRequest) => {
+        await signupMutation.mutateAsync(data);
     };
 
     return (
@@ -17,9 +19,9 @@ const SignupPage = () => {
             <CustomForm
                 fields={registrationFormConfig}
                 onSubmit={handleSignup}
-                submitText="Зареєструватися"
+                submitText="Sign Up"
             />
-            <p className="mt-10">Вже маєте обліковий запис? <a href="/login" className="text-blue-500">Увійти тут</a></p>
+            <p className="mt-10">Already have an account? <a href="/login" className="text-blue-500">Login here</a></p>
         </div>
     )
 }

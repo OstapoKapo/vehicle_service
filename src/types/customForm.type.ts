@@ -7,6 +7,7 @@ export interface FormField {
   placeholder?: string;
   type?: string;
   rules?: RegisterOptions;
+  defaultValue?: string;
 }
 
 export interface CustomFormProps<T extends FieldValues> {

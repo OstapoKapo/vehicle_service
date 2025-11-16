@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 
 import "./styles/globals.css";
+import { QueryProvider } from "@/components/wrapper/queryProvider.component";
 import { ThemeProviders } from "@/components/wrapper/themeWrapper.component";
 import { Header } from "@/components/layout/header";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -30,8 +32,11 @@ export default function RootLayout({
         className={`${montserrat.variable}`}
       >
       <ThemeProviders>
-        <Header />
-        {children}
+        <QueryProvider>
+          <Header />
+          {children}
+          <Toaster position="top-right" reverseOrder={false} />
+        </QueryProvider>
       </ThemeProviders>
       </body>
     </html>
