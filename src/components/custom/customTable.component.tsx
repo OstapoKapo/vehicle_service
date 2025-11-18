@@ -1,6 +1,7 @@
 'use client';
 
 import { CustomTableProps } from "@/types/customTable.type";
+import { CustomBtn } from "./customBtn.component";
 
 export const CustomTable = <T extends { id: string | number }>({ 
   data, 
@@ -62,21 +63,12 @@ export const CustomTable = <T extends { id: string | number }>({
         </span>
         
         <div className="flex gap-2">
-          <button
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          >
-            Назад
-          </button>
+         <CustomBtn label="Back" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} style="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all" />
           
-          <button
-            onClick={() => onPageChange(currentPage + 1)}
+          <CustomBtn label="Forward" onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          >
-            Вперед
-          </button>
+            style="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          />
         </div>
       </div>
     </div>

@@ -27,7 +27,6 @@ export const Header = () => {
     const isHomePage = pathname === '/';
     const isDetailPage = pathname.startsWith('/users/') || pathname.startsWith('/vehicles/');
     const isListPage = isUserPage || isVehiclePage;
-    const isCreatePage = pathname === '/users/create' || pathname === '/vehicles/create';
 
     const handleLogout = () => {
         logoutMutation.mutate(undefined); 
@@ -63,7 +62,7 @@ export const Header = () => {
                             <CustomBtn 
                                 label="Logout" 
                                 onClick={handleLogout} 
-                                style="bg-red-500 hover:bg-red-600 text-white" 
+                                style="bg-red-500 hover:bg-red-600 text-foreground" 
                             />
                         )}
                         {isListPage && (
@@ -72,18 +71,7 @@ export const Header = () => {
                                 onClick={() => router.push('/')} 
                                 style="w-40 variant-secondary" 
                             />
-                        )}
-                        {isCreatePage && (
-                            <CustomBtn 
-                                label="Back to List" 
-                                onClick={() => {
-                                    if (isUserPage) router.push('/users');
-                                    if (isVehiclePage) router.push('/vehicles');
-                                }} 
-                                style="w-40 variant-secondary"
-                            />
-                        )}
-                        
+                        )}                    
                         {isDetailPage && (
                             <CustomBtn 
                                 label="Back" 

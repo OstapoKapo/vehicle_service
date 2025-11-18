@@ -1,3 +1,4 @@
+import { CustomBtn } from "@/components/custom/customBtn.component";
 import { PAGINATION_LIMIT } from "@/constants/app.constants";
 import { ColumnConfig } from "@/types/customTable.type";
 import { User } from "@/types/user.type";
@@ -39,20 +40,10 @@ export const getUserColumns = ({ page, onDelete, onEdit }: UserColumnsProps): Co
         {
             header: 'Actions',
             render: (user) => (
-                <div className="space-x-4">
-                    <button 
-                        className="text-red-500 hover:underline" 
-                        onClick={() => onDelete(user.id)}
-                    >
-                        Delete
-                    </button>
+                <div className="gap-2 flex items-center">
+                    <CustomBtn label="Delete" onClick={() => onDelete(user.id)} style="text-red-500 hover:underline"/>
                     
-                    <button 
-                        className="text-blue-500 hover:underline" 
-                        onClick={() => onEdit(user)} 
-                    >
-                        Edit
-                    </button>
+                    <CustomBtn label="Edit" onClick={() => onEdit(user)} style="text-blue-500 hover:underline" />
                     
                     <Link href={`/users/${user.id}`} className="text-green-500 hover:underline">
                         View
