@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 import "./styles/globals.css";
 import { QueryProvider } from "@/components/wrapper/queryProvider.component";
 import { ThemeProviders } from "@/components/wrapper/themeWrapper.component";
-import { Header } from "@/components/layout/header";
+import { Header } from "@/components/ui/header";
 import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({

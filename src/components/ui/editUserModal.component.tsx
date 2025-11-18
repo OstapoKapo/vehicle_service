@@ -2,6 +2,7 @@
 
 import { User } from "@/types/user.type";
 import { useState, useEffect } from "react";
+import { CustomBtn } from "../custom/customBtn.component";
 
 interface EditUserModalProps {
     user: User | null;
@@ -53,12 +54,8 @@ export const EditUserModal = ({ user, isOpen, onClose, onSave, isLoading }: Edit
                     </div>
 
                     <div className="flex justify-end gap-2 mt-4">
-                        <button type="button" onClick={onClose}className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">
-                            Cancel
-                        </button>
-                        <button type="submit" disabled={isLoading}className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
-                            {isLoading ? 'Saving...' : 'Save Changes'}
-                        </button>
+                        <CustomBtn type="button" onClick={onClose} style="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" label="Cancel"/>
+                        <CustomBtn type="submit" disabled={isLoading} style="px-4 py-2 bg-blue-600   rounded hover:bg-blue-700 disabled:opacity-50" label={isLoading ? 'Saving...' : 'Save Changes'}/>
                     </div>
                 </form>
             </div>

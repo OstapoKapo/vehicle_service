@@ -71,11 +71,10 @@ export const CustomForm = <T extends FieldValues>({ fields, onSubmit, submitText
         })}
 
         <CustomBtn
+          label={submitText}
           type="submit"
           style="btn btn-primary w-full justify-center"
-        >
-          {submitText}
-        </CustomBtn>
+        />
       </form>
     </div>
   );
