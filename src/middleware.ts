@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
     try {
       await jwtVerify(token, SECRET);
       return NextResponse.redirect(new URL('/', req.url));
-    } catch (e) {
+    } catch (_e) {
       const res = NextResponse.next();
       res.cookies.set('accessToken', '', { maxAge: 0 });
       return res;
@@ -30,5 +30,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/signup'],
+  matcher: ['/', '/login', '/users/:path*', '/vehicles/:path*'],
 };

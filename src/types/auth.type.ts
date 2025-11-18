@@ -20,3 +20,7 @@ export interface SignupRequest {
 export interface SignupResponse {
     message: string;
 }
+
+export interface LogoutResponse {
+    message: string;
+}

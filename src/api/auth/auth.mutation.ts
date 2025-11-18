@@ -1,28 +1,28 @@
 
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from '@/types/auth.type';
+import { LoginRequest, LoginResponse, LogoutResponse, SignupRequest, SignupResponse } from '@/types/auth.type';
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast/headless';
-import { loginEndpoint, signupEndpoint } from './auth.endpoint';
-
-export const useSignupMutation = (): UseMutationResult<SignupResponse, unknown, SignupRequest> => {
-	const router = useRouter();
-	return useMutation({
-		mutationFn: signupEndpoint,
-		onSuccess: (data: SignupResponse) => {
-			toast.success(data.message);
-			router.push('/login');
-		},
-	});
-};
+import { loginEndpoint, logoutEndpoint } from './auth.endpoint';
+import toast from 'react-hot-toast';
 
 export const useLoginMutation = (): UseMutationResult<LoginResponse, unknown, LoginRequest> => {
     const router = useRouter();
     return useMutation({
-        mutationFn: loginEndpoint,
-        onSuccess: (data: LoginResponse) => {
+        mutationFn: (data) => loginEndpoint(data),
+        onSuccess: (data) => {
             toast.success(data.message);
             router.push('/');
+        },
+    });
+}
+
+export const useLogoutMutation = (): UseMutationResult<LogoutResponse, unknown, undefined> => {
+    const router = useRouter();
+    return useMutation({
+        mutationFn: () => logoutEndpoint(),
+        onSuccess: (data) => {
+            toast.success(data.message);
+            router.push('/login');
         },
     });
 }
