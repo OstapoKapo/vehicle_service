@@ -1,6 +1,7 @@
 import type { HttpService } from './http.service';
 
 import type { IHttpConfig, IMap } from '../types/services.type';
+import { cookies } from 'next/dist/server/request/cookies';
 
 export class EnhancedWithAuthHttpService {
 	constructor(private readonly httpService: HttpService) {
@@ -61,12 +62,19 @@ export class EnhancedWithAuthHttpService {
 		);
 	}
 
-	private async attachAuthHeader(config: IHttpConfig): Promise<IHttpConfig> {
+	private async attachAuthHeader(config: IHttpConfig, options: RequestInit = {}): Promise<IHttpConfig> {
+		let headers: Record<string, string> = options.headers as Record<string, string> || {};
+		if(typeof window === 'undefined'){
+			const cookieStore = await cookies();
+			const cookieHeader = cookieStore
+				.getAll()
+				.map((cookie) => `${cookie.name}=${cookie.value}`)
+				.join('; '); 
+			headers = {...headers, Cookie: cookieHeader };	
+		}
 		return {
 			...config,
-			headers: {
-				...config.headers,
-			},
+			headers,
 		};
 	}
 }

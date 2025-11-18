@@ -22,7 +22,6 @@ const LoginPage = () => {
                 onSubmit={handleLogin}
                 submitText="Login"
             />
-            <p className="mt-10">Don't have an account? <a href="/signup" className="text-blue-500">Sign up here</a></p>
         </div>
     );
 }

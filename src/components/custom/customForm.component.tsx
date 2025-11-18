@@ -9,6 +9,7 @@ import {
 } from 'react-hook-form';
 import { FormField } from '@/types/customForm.type';
 import { useMemo } from 'react';
+import { CustomBtn } from './customBtn.component';
 
 interface DynamicFormProps<T extends FieldValues> {
   fields: FormField[]; 
@@ -21,7 +22,7 @@ export const CustomForm = <T extends FieldValues>({ fields, onSubmit, submitText
   
   const defaultValues = useMemo<DefaultValues<T>>(() => {
     return fields.reduce((acc, field) => {
-      (acc as any)[field.name] = field.defaultValue || ''; 
+      field.type === 'checkbox' ? (acc as any)[field.name] = field.defaultValue : (acc as any)[field.name] = field.defaultValue || ''; 
       return acc;
     }, {} as DefaultValues<T>);
   }, [fields]);
@@ -31,13 +32,16 @@ export const CustomForm = <T extends FieldValues>({ fields, onSubmit, submitText
     defaultValues: defaultValues, 
   });
 
+
   const onFormSubmit = handleSubmit(onSubmit);
 
   return (
     <div className="card w-full max-w-md">
       <form onSubmit={onFormSubmit} className="space-y-6">
         
-        {fields.map((field: FormField) => (
+        {fields.map((field: FormField) => {
+          const { onChange: rhfOnChange, ...rhfProps } = register(field.name as Path<T>, field.rules as Record<string, unknown>);
+          return (
           <div key={field.name} className="flex flex-col">
             <label htmlFor={field.name} className="block text-sm font-medium text-foreground">
               {field.label}
@@ -47,8 +51,14 @@ export const CustomForm = <T extends FieldValues>({ fields, onSubmit, submitText
               type={field.type || 'text'} 
               className="mt-1 block w-full rounded-md border p-2 shadow-sm focus:border-primary focus:ring-primary bg-background text-foreground border-border"
               style={{'border': !!errors[field.name as Path<T>] ? '1px solid red' : ''}}
-              
-              {...register(field.name as Path<T>, field.rules as Record<string, unknown>)}
+              placeholder={field.placeholder}
+              {...rhfProps}
+              onChange={(e) => {
+                rhfOnChange(e);
+                if (field.onChange) {
+                  field.onChange(e);
+                }
+              }}
             />
             
             {errors[field.name as Path<T>] && (
@@ -57,14 +67,15 @@ export const CustomForm = <T extends FieldValues>({ fields, onSubmit, submitText
               </span>
             )}
           </div>
-        ))}
+          );
+        })}
 
-        <button
+        <CustomBtn
           type="submit"
-          className="btn btn-primary w-full justify-center"
+          style="btn btn-primary w-full justify-center"
         >
           {submitText}
-        </button>
+        </CustomBtn>
       </form>
     </div>
   );
