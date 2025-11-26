@@ -1,29 +1,32 @@
 # Етап 1: Встановлення залежностей
-FROM node:18-alpine AS deps
+# 👇 ЗМІНЕНО: Використовуємо Node.js 20 (LTS), бо Next.js вимагає >=20.9.0
+FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 # Використовуємо ci для чистої інсталяції
 RUN npm ci
 
 # Етап 2: Збірка (Build)
-FROM node:18-alpine AS builder
+# 👇 ЗМІНЕНО: Node.js 20
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 👇 ДОДАНО: Приймаємо змінну, яку передав docker-compose
+# Приймаємо змінну, яку передав docker-compose
 ARG NEXT_PUBLIC_SERVER_URL
-# 👇 ДОДАНО: Робимо її доступною для команди npm run build
+# Робимо її доступною для команди npm run build
 ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 
 # Вимикаємо телеметрію Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Створюємо білд. Тепер Next.js "запече" вашу змінну всередину коду
+# Створюємо білд
 RUN npm run build
 
 # Етап 3: Запуск (Runner)
-FROM node:18-alpine AS runner
+# 👇 ЗМІНЕНО: Node.js 20
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
