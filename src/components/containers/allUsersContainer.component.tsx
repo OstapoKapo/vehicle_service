@@ -1,73 +1,87 @@
-'use client';
+"use client";
 
 import { GetAllUsersResponse, User } from "@/types/user.type";
-import { CustomTable } from "../custom/customTable.component"; 
+import { CustomTable } from "../custom/customTable.component";
 import { useEffect, useMemo, useState } from "react";
-import { useDeleteUserMutation, useUpdateUserMutation } from "@/api/user/user.mutation"; 
-import { EditUserModal } from "../ui/editUserModal.component"; 
+import {
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+} from "@/api/user/user.mutation";
+import { EditUserModal } from "../ui/editUserModal.component";
 import { getUserColumns } from "@/configs/allUsersTable.config";
 import { useGetAllUsersQuery } from "@/api/auth/auth.query";
 
 interface AllUsersContainerProps {
-    initialData: GetAllUsersResponse;
+  initialData: GetAllUsersResponse;
 }
 
 export const AllUsersContainer = ({ initialData }: AllUsersContainerProps) => {
-    const [page, setPage] = useState(1);
-    
-    const [editingUser, setEditingUser] = useState<User | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
-    const deleteMutation = useDeleteUserMutation();
-    const updateMutation = useUpdateUserMutation(); 
-    
-    const { data, isLoading } = useGetAllUsersQuery(page, initialData);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleEditClick = (user: User) => {
-        setEditingUser(user);
-        setIsModalOpen(true);
-    };
+  const deleteMutation = useDeleteUserMutation();
+  const updateMutation = useUpdateUserMutation();
 
-    const handleSaveChanges = (id: string, updatedData: Partial<User>) => {
-        updateMutation.mutate({ id, data: updatedData }, {
-            onSuccess: () => {
-                setIsModalOpen(false);
-                setEditingUser(null);
-            }
-        });
-    };
+  const { data, isLoading } = useGetAllUsersQuery(page, initialData);
 
-    const userColumns = useMemo(() =>  getUserColumns({
+  const handleEditClick = (user: User) => {
+    setEditingUser(user);
+    setIsModalOpen(true);
+  };
+
+  console.log("Procees");
+  console.log(process.env.NEXT_PUBLIC_API_URL);
+
+  const handleSaveChanges = (id: string, updatedData: Partial<User>) => {
+    updateMutation.mutate(
+      { id, data: updatedData },
+      {
+        onSuccess: () => {
+          setIsModalOpen(false);
+          setEditingUser(null);
+        },
+      },
+    );
+  };
+
+  const userColumns = useMemo(
+    () =>
+      getUserColumns({
         page,
         onDelete: (id) => deleteMutation.mutate(id),
-        onEdit: (user) => handleEditClick(user)
-    }), [page, deleteMutation, handleEditClick]);
+        onEdit: (user) => handleEditClick(user),
+      }),
+    [page, deleteMutation, handleEditClick],
+  );
 
-    useEffect(() => {
-        if (!isLoading && data?.users?.length === 0 && page > 1) {
-            setPage((prev) => prev - 1);
-        }
-    }, [data, isLoading, page]);
+  useEffect(() => {
+    if (!isLoading && data?.users?.length === 0 && page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  }, [data, isLoading, page]);
 
-    return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-6">Користувачі</h1>
-            <CustomTable 
-                data={data?.users || []} 
-                columns={userColumns} 
-                isLoading={false}
-                currentPage={page}
-                totalPages={data?.totalPages || 1}
-                onPageChange={(newPage) => setPage(newPage)}
-            />
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Користувачі</h1>
+      <CustomTable
+        data={data?.users || []}
+        columns={userColumns}
+        isLoading={false}
+        currentPage={page}
+        totalPages={data?.totalPages || 1}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
 
-            <EditUserModal 
-                isOpen={isModalOpen}
-                user={editingUser}
-                onClose={() => setIsModalOpen(false)}
-                onSave={handleSaveChanges}
-                isLoading={updateMutation.isPending}
-            />
-        </div>
-    );
-}
+      <EditUserModal
+        isOpen={isModalOpen}
+        user={editingUser}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveChanges}
+        isLoading={updateMutation.isPending}
+      />
+    </div>
+  );
+};
+
