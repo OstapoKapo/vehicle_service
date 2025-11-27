@@ -1,4 +1,6 @@
+import { EnhancedWithAuthHttpService } from "@/services/http-auth.service";
 import { HttpFactoryService } from "@/services/http-factory.service";
+
 import {
   CreateUserRequest,
   CreateUserResponse,
@@ -7,57 +9,55 @@ import {
   GetUserByIdResponse,
   UpdateUserRequest,
   UpdateUserResponse,
-  User,
 } from "@/types/user.type";
 
 const getHttp = () => {
   const httpFactory = new HttpFactoryService();
-  return httpFactory.createHttpService();
+  const http = httpFactory.createHttpService();
+  return new EnhancedWithAuthHttpService(http); 
 };
 
 const getAuthHttp = () => {
   const httpFactory = new HttpFactoryService();
-  return httpFactory.createAuthHttpService();
+  const http = httpFactory.createAuthHttpService(); 
+  return new EnhancedWithAuthHttpService(http);    
 };
+
 
 export const getAllUsersEndpoint = async (
   page: number,
-  limit: number,
+  limit: number
 ): Promise<GetAllUsersResponse> => {
-  console.log(process.env.NEXT_PUBLIC_SERVER_URL);
-  return getHttp().get<GetAllUsersResponse>(
-    `users/?page=${page}&limit=${limit}`,
-  );
+  return getHttp().get<GetAllUsersResponse>(`users/?page=${page}&limit=${limit}`);
 };
 
 export const getUserByIdEndpoint = async (
-  id: string,
+  id: string
 ): Promise<GetUserByIdResponse> => {
   return getHttp().get<GetUserByIdResponse>(`users/${id}`);
 };
 
 export const deleteUserByIdEndpoint = async (
-  id: string,
+  id: string
 ): Promise<DeleteUserResponse> => {
   return getAuthHttp().delete<DeleteUserResponse>(`users/${id}`);
 };
 
 export const updateUserByIdEndpoint = async (
   id: string,
-  data: UpdateUserRequest,
+  data: UpdateUserRequest
 ): Promise<UpdateUserResponse> => {
   return getAuthHttp().put<UpdateUserResponse, UpdateUserRequest>(
     `users/${id}`,
-    data,
+    data
   );
 };
 
 export const createUserEndpoint = async (
-  data: CreateUserRequest,
+  data: CreateUserRequest
 ): Promise<CreateUserResponse> => {
   return getAuthHttp().post<CreateUserResponse, CreateUserRequest>(
     "users",
-    data,
+    data
   );
 };
-

@@ -31,9 +31,6 @@ export const AllUsersContainer = ({ initialData }: AllUsersContainerProps) => {
     setIsModalOpen(true);
   };
 
-  console.log("Procees");
-  console.log(process.env.NEXT_PUBLIC_API_URL);
-
   const handleSaveChanges = (id: string, updatedData: Partial<User>) => {
     updateMutation.mutate(
       { id, data: updatedData },

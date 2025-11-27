@@ -1,80 +1,65 @@
 import type { HttpService } from './http.service';
-
-import type { IHttpConfig, IMap } from '../types/services.type';
+import type { IHttpConfig } from '../types/services.type';
 import { cookies } from 'next/dist/server/request/cookies';
 
 export class EnhancedWithAuthHttpService {
-	constructor(private readonly httpService: HttpService) {
-		this.httpService = httpService;
-	}
+  constructor(private readonly httpService: HttpService) {}
 
-	public createQueryLink(base: string, parameters: IMap): string {
-		return this.httpService.createQueryLink(base, parameters);
-	}
+  private async attachAuthHeader(config: IHttpConfig = {}): Promise<IHttpConfig> {
+    let headers: Record<string, string> = {
+      ...(config.headers || {})
+    };
 
-	public async get<T>(url: string, config: IHttpConfig = {}): Promise<T> {
-		return this.httpService.get<T>(
-			url,
-			await this.attachAuthHeader(config),
-		);
-	}
+    if (typeof window === "undefined") {
+      const cookieStore = await cookies();
+      const cookieHeader = cookieStore
+        .getAll()
+        .map(c => `${c.name}=${c.value}`)
+        .join("; ");
 
-	public async post<T, TD>(
-		url: string,
-		data: TD,
-		config: IHttpConfig = {},
-	): Promise<T> {
-		return this.httpService.post<T, TD>(
-			url,
-			data,
-			await this.attachAuthHeader(config),
-		);
-	}
+      if (cookieHeader.length > 0) {
+        headers["Cookie"] = cookieHeader;
+      }
+    }
 
-	public async put<T, TD>(
-		url: string,
-		data: TD,
-		config: IHttpConfig = {},
-	): Promise<T> {
-		return this.httpService.put<T, TD>(
-			url,
-			data,
-			await this.attachAuthHeader(config),
-		);
-	}
+    return {
+      ...config,
+      headers
+    };
+  }
 
-	public async patch<T, TD>(
-		url: string,
-		data: TD,
-		config: IHttpConfig = {},
-	): Promise<T> {
-		return this.httpService.patch<T, TD>(
-			url,
-			data,
-			await this.attachAuthHeader(config),
-		);
-	}
+  async get<T>(url: string, config: IHttpConfig = {}): Promise<T> {
+    return this.httpService.get<T>(url, await this.attachAuthHeader(config));
+  }
 
-	public async delete<T>(url: string, config: IHttpConfig = {}): Promise<T> {
-		return this.httpService.delete<T>(
-			url,
-			await this.attachAuthHeader(config),
-		);
-	}
+  async post<T, D>(url: string, data: D, config: IHttpConfig = {}): Promise<T> {
+    return this.httpService.post<T, D>(
+      url,
+      data,
+      await this.attachAuthHeader(config)
+    );
+  }
 
-	private async attachAuthHeader(config: IHttpConfig, options: RequestInit = {}): Promise<IHttpConfig> {
-		let headers: Record<string, string> = options.headers as Record<string, string> || {};
-		if(typeof window === 'undefined'){
-			const cookieStore = await cookies();
-			const cookieHeader = cookieStore
-				.getAll()
-				.map((cookie) => `${cookie.name}=${cookie.value}`)
-				.join('; '); 
-			headers = {...headers, Cookie: cookieHeader };	
-		}
-		return {
-			...config,
-			headers,
-		};
-	}
+  async put<T, D>(url: string, data: D, config: IHttpConfig = {}): Promise<T> {
+    return this.httpService.put<T, D>(
+      url,
+      data,
+      await this.attachAuthHeader(config)
+    );
+  }
+
+  async patch<T, D>(url: string, data: D, config: IHttpConfig = {}): Promise<T> {
+    return this.httpService.patch<T, D>(
+      url,
+      data,
+      await this.attachAuthHeader(config)
+    );
+  }
+
+  async delete<T>(url: string, config: IHttpConfig = {}): Promise<T> {
+    return this.httpService.delete<T>(
+      url,
+      await this.attachAuthHeader(config)
+    );
+  }
 }
