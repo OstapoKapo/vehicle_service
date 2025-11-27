@@ -1,136 +1,65 @@
-import type { IHttpClient } from '../types/services.type';
-import type { IHttpConfig, IMap, IResponse } from '../types/services.type';
-
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000/api';
+import type { IHttpClient, IHttpConfig, IResponse } from "../types/services.type";
+import { getBaseUrl } from "@/utils/baseUrl.util";
 
 export class HttpService {
-	constructor(
-		private readonly fetchingService: IHttpClient,
-		private readonly baseUrl: string = SERVER_URL,
-	) {
-		this.fetchingService = fetchingService;
-		this.baseUrl = baseUrl;
-	}
+  constructor(
+    private readonly http: IHttpClient,
+    private readonly service: 'user' | 'vehicle'
+  ) {}
 
-	public createQueryLink(base: string, args: IMap): string {
-		let url = `${base}?`;
+  private base() {
+    return getBaseUrl(this.service);
+  }
 
-		Object.keys(args).forEach((parameter) => {
-			if (typeof args[parameter] !== 'undefined') {
-				url = `${url}&${parameter}=${String(args[parameter])}`;
-			}
-		});
+  private url(path: string) {
+    return `${this.base()}/${path}`;
+  }
 
-		return url;
-	}
+  private headers(config?: IHttpConfig) {
+    return {
+	  withCredentials: true,
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        ...config?.headers,
+      }
+    };
+  }
 
-	public async get<T>(url: string, config?: IHttpConfig): Promise<T> {
-		return this.fetchingService
-			.get<IResponse<T>>(this.getFullApiUrl(url), {
-				...config,
-				headers: {
-					...config?.headers,
-					...this.populateContentTypeHeaderConfig(),
-				},
-			})
-			.then((result) => {
-				this.checkResponseStatus(result);
-				return result.data;
-			});
-	}
+  private check<T>(res: IResponse<T>): T {
+    if (res.status >= 400) {
+      throw new Error(JSON.stringify({
+        response: {
+          status: res.status,
+          data: res.data
+        }
+      }));
+    }
+    return res.data;
+  }
 
-	public async post<T, TD>(
-		url: string,
-		data: TD,
-		config?: IHttpConfig,
-	): Promise<T> {
-		return this.fetchingService
-			.post<IResponse<T>, TD>(this.getFullApiUrl(url), data, {
-				...config,
-				headers: {
-					...config?.headers,
-					...this.populateContentTypeHeaderConfig(),
-				},
-			})
-			.then((result) => {
-				this.checkResponseStatus(result);
-				return result.data;
-			});
-	}
+  async get<T>(path: string, config?: IHttpConfig): Promise<T> {
+    const res = await this.http.get<IResponse<T>>(this.url(path), this.headers(config));
+    return this.check(res);
+  }
 
-	public async put<T, TD>(
-		url: string,
-		data: TD,
-		config?: IHttpConfig,
-	): Promise<T> {
-		return this.fetchingService
-			.put<IResponse<T>, TD>(this.getFullApiUrl(url), data, {
-				...config,
-				headers: {
-					...config?.headers,
-					...this.populateContentTypeHeaderConfig(),
-				},
-			})
-			.then((result) => {
-				this.checkResponseStatus(result);
-				return result.data;
-			});
-	}
+  async post<T, D>(path: string, data: D, config?: IHttpConfig): Promise<T> {
+    const res = await this.http.post<IResponse<T>, D>(this.url(path), data, this.headers(config));
+    return this.check(res);
+  }
 
-	public async patch<T, TD>(
-		url: string,
-		data: TD,
-		config?: IHttpConfig,
-	): Promise<T> {
-		return this.fetchingService
-			.patch<IResponse<T>, TD>(this.getFullApiUrl(url), data, {
-				...config,
-				headers: {
-					...config?.headers,
-					...this.populateContentTypeHeaderConfig(),
-				},
-			})
-			.then((result) => {
-				this.checkResponseStatus(result);
-				return result.data;
-			});
-	}
+  async put<T, D>(path: string, data: D, config?: IHttpConfig): Promise<T> {
+    const res = await this.http.put<IResponse<T>, D>(this.url(path), data, this.headers(config));
+    return this.check(res);
+  }
 
-	public async delete<T>(url: string, config?: IHttpConfig): Promise<T> {
-		return this.fetchingService
-			.delete<IResponse<T>>(this.getFullApiUrl(url), {
-				...config,
-				headers: {
-					...config?.headers,
-					...this.populateContentTypeHeaderConfig(),
-				},
-			})
-			.then((result) => {
-				this.checkResponseStatus(result);
-				return result.data;
-			});
-	}
+  async patch<T, D>(path: string, data: D, config?: IHttpConfig): Promise<T> {
+    const res = await this.http.patch<IResponse<T>, D>(this.url(path), data, this.headers(config));
+    return this.check(res);
+  }
 
-	public populateContentTypeHeaderConfig(): Record<string, string> {
-		return {
-			'Content-Type': 'application/json',
-		};
-	}
-
-	private getFullApiUrl(url: string): string {
-		return `${this.baseUrl}/${url}`;
-	}
-
-	private async checkResponseStatus<T>(result: IResponse<T>): Promise<void> {
-		if (result.status >= 400 && result.status < 600) {
-			const errorData = {
-				response: {
-					status: result.status,
-					data: result.data,
-				},
-			};
-
-			throw new Error(JSON.stringify(errorData));
-		}
-	}
+  async delete<T>(path: string, config?: IHttpConfig): Promise<T> {
+    const res = await this.http.delete<IResponse<T>>(this.url(path), this.headers(config));
+    return this.check(res);
+  }
 }

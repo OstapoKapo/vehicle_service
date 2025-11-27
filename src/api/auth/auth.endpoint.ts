@@ -1,14 +1,22 @@
+import { EnhancedWithAuthHttpService } from "@/services/http-auth.service";
 import { HttpFactoryService } from "@/services/http-factory.service";
-import { LoginRequest, LoginResponse, LogoutResponse } from "@/types/auth.type";
+
+import {
+  LoginRequest,
+  LoginResponse,
+  LogoutResponse
+} from "@/types/auth.type";
 
 const getHttp = () => {
-  const httpFactory = new HttpFactoryService();
-  return httpFactory.createHttpService();
+  const factory = new HttpFactoryService();
+  const http = factory.createHttpService();
+  return new EnhancedWithAuthHttpService(http);
 };
 
 const getAuthHttp = () => {
-  const httpFactory = new HttpFactoryService();
-  return httpFactory.createAuthHttpService();
+  const factory = new HttpFactoryService();
+  const http = factory.createAuthHttpService(); 
+  return new EnhancedWithAuthHttpService(http);
 };
 
 export const loginEndpoint = async (
