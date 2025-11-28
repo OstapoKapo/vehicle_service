@@ -17,7 +17,6 @@ export class HttpService {
 
   private headers(config?: IHttpConfig) {
     return {
-	  withCredentials: true,
       ...config,
       headers: {
         'Content-Type': 'application/json',

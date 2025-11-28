@@ -9,19 +9,13 @@ export interface Vehicle {
   userId: string;
 }
 
-export interface GetAllVehicleRes {
-  data: Vehicle[];
-}
-
-export interface GetAllVehicleReq {
-  limit: number;
-  page: number;
-}
-
-export interface UpdateVehicleRes {
+export interface DefaultVehicleRes {
   message: string;
 }
 
-export interface UpdateVehicleReq {
-  vehicle: Partial<Vehicle>;
+export interface GetAllVehicleRes {
+  data: Vehicle[];
+  total: number;
+  totalPages: number;
 }
+

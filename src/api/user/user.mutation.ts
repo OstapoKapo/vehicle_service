@@ -1,23 +1,23 @@
 
-import { CreateUserRequest, CreateUserResponse, DeleteUserResponse, UpdateUserRequest, UpdateUserResponse, User } from '@/types/user.type';
+import { CreateUserReq, UpdateUserReq, User } from '@/types/user.type';
 import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { createUserEndpoint, deleteUserByIdEndpoint, updateUserByIdEndpoint } from './user.endpoint';
 import toast from 'react-hot-toast';
 import { create } from 'domain';
 import { useRouter } from 'next/navigation';
 
-export const useDeleteUserMutation = (): UseMutationResult<DeleteUserResponse, unknown, string> => {
+export const useDeleteUserMutation = (): UseMutationResult<{message: string}, unknown, string> => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: deleteUserByIdEndpoint,
-        onSuccess: async (data: DeleteUserResponse) => {
+        onSuccess: async (data: {message: string}) => {
             toast.success(data.message);
             await queryClient.invalidateQueries({ queryKey: ['users'] });
         },
     });
 }
 
-export const useUpdateUserMutation = (): UseMutationResult<UpdateUserResponse, unknown, { id: string, data: UpdateUserRequest }> => {
+export const useUpdateUserMutation = (): UseMutationResult<{message: string}, unknown, { id: string, data: UpdateUserReq }> => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ id, data }) => updateUserByIdEndpoint(id, data),
@@ -28,7 +28,7 @@ export const useUpdateUserMutation = (): UseMutationResult<UpdateUserResponse, u
     });
 };
 
-export const useCreateUserMutation = (): UseMutationResult<CreateUserResponse, unknown, CreateUserRequest> => {
+export const useCreateUserMutation = (): UseMutationResult<{message: string}, unknown, CreateUserReq> => {
     const queryClient = useQueryClient();
     const router = useRouter();
     return useMutation({

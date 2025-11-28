@@ -11,9 +11,6 @@ mainAxios.interceptors.response.use(
 		return response;
 	},
 	async (error) => {
-		if (Boolean(error.response) && error.response.status === 401) {
-			// useAuthStore.getState().setAuth(false)();
-		}
 		if (error.response) {
 			const status = error.response.status;
 			const message =
