@@ -7,7 +7,7 @@ export interface FormField {
   placeholder?: string;
   type?: string;
   rules?: RegisterOptions;
-  defaultValue?: string | boolean;
+  defaultValue?: string | boolean | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

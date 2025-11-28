@@ -1,17 +1,15 @@
 import axios from "axios";
 import { HttpService } from "./http.service";
+import { mainAxios } from "./mainAxios";
 
 export class HttpFactoryService {
-  createHttpService() {
-    return new HttpService(axios, "user");
+  createHttpService(target: "user" | "vehicle" = "user") {
+	const instance = mainAxios;
+    return new HttpService(instance, target);
   }
 
-  createVehicleHttpService() {
-    return new HttpService(axios, "vehicle");
-  }
-
-  createAuthHttpService() {
-    const instance = axios.create();
+  createAuthHttpService(target: "user" | "vehicle" = "user") {
+    const instance = mainAxios;
 
     instance.interceptors.request.use((config) => {
       if (typeof window !== "undefined") {
@@ -31,6 +29,6 @@ export class HttpFactoryService {
       return config;
     });
 
-    return new HttpService(instance, "user");
+    return new HttpService(instance, target);
   }
 }

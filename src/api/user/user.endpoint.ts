@@ -2,24 +2,21 @@ import { EnhancedWithAuthHttpService } from "@/services/http-auth.service";
 import { HttpFactoryService } from "@/services/http-factory.service";
 
 import {
-  CreateUserRequest,
-  CreateUserResponse,
-  DeleteUserResponse,
-  GetAllUsersResponse,
-  GetUserByIdResponse,
-  UpdateUserRequest,
-  UpdateUserResponse,
+  CreateUserReq,
+  GetAllUsersRes,
+  UpdateUserReq,
+  User
 } from "@/types/user.type";
 
 const getHttp = () => {
   const httpFactory = new HttpFactoryService();
-  const http = httpFactory.createHttpService();
+  const http = httpFactory.createHttpService("user");
   return new EnhancedWithAuthHttpService(http); 
 };
 
 const getAuthHttp = () => {
   const httpFactory = new HttpFactoryService();
-  const http = httpFactory.createAuthHttpService(); 
+  const http = httpFactory.createAuthHttpService("user"); 
   return new EnhancedWithAuthHttpService(http);    
 };
 
@@ -27,36 +24,36 @@ const getAuthHttp = () => {
 export const getAllUsersEndpoint = async (
   page: number,
   limit: number
-): Promise<GetAllUsersResponse> => {
-  return getHttp().get<GetAllUsersResponse>(`users/?page=${page}&limit=${limit}`);
+): Promise<GetAllUsersRes> => {
+  return getHttp().get<GetAllUsersRes>(`users/?page=${page}&limit=${limit}`);
 };
 
 export const getUserByIdEndpoint = async (
   id: string
-): Promise<GetUserByIdResponse> => {
-  return getHttp().get<GetUserByIdResponse>(`users/${id}`);
+): Promise<{data: User}> => {
+  return getHttp().get<{data: User}>(`users/${id}`);
 };
 
 export const deleteUserByIdEndpoint = async (
   id: string
-): Promise<DeleteUserResponse> => {
-  return getAuthHttp().delete<DeleteUserResponse>(`users/${id}`);
+): Promise<{message: string}> => {
+  return getAuthHttp().delete<{message: string}>(`users/${id}`);
 };
 
 export const updateUserByIdEndpoint = async (
   id: string,
-  data: UpdateUserRequest
-): Promise<UpdateUserResponse> => {
-  return getAuthHttp().put<UpdateUserResponse, UpdateUserRequest>(
+  data: UpdateUserReq
+): Promise<{message: string}> => {
+  return getAuthHttp().put<{message: string}, UpdateUserReq>(
     `users/${id}`,
     data
   );
 };
 
 export const createUserEndpoint = async (
-  data: CreateUserRequest
-): Promise<CreateUserResponse> => {
-  return getAuthHttp().post<CreateUserResponse, CreateUserRequest>(
+  data: CreateUserReq
+): Promise<{message: string}> => {
+  return getAuthHttp().post<{message: string}, CreateUserReq>(
     "users",
     data
   );

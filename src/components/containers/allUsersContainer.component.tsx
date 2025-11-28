@@ -1,6 +1,6 @@
 "use client";
 
-import { GetAllUsersResponse, User } from "@/types/user.type";
+import { GetAllUsersRes, User } from "@/types/user.type";
 import { CustomTable } from "../custom/customTable.component";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -9,10 +9,11 @@ import {
 } from "@/api/user/user.mutation";
 import { EditUserModal } from "../ui/editUserModal.component";
 import { getUserColumns } from "@/configs/allUsersTable.config";
-import { useGetAllUsersQuery } from "@/api/auth/auth.query";
+import { useGetAllUsersQuery } from "@/api/user/user.query";
+import { Vehicle } from "@/types/vehicles.type";
 
 interface AllUsersContainerProps {
-  initialData: GetAllUsersResponse;
+  initialData: GetAllUsersRes;
 }
 
 export const AllUsersContainer = ({ initialData }: AllUsersContainerProps) => {
@@ -31,9 +32,9 @@ export const AllUsersContainer = ({ initialData }: AllUsersContainerProps) => {
     setIsModalOpen(true);
   };
 
-  const handleSaveChanges = (id: string, updatedData: Partial<User>) => {
+  const handleSaveChanges = (id: string, updatedData: Partial<User> | Partial<Vehicle>) => {
     updateMutation.mutate(
-      { id, data: updatedData },
+      { id, data: updatedData as Partial<User> },
       {
         onSuccess: () => {
           setIsModalOpen(false);
@@ -72,6 +73,7 @@ export const AllUsersContainer = ({ initialData }: AllUsersContainerProps) => {
       />
 
       <EditUserModal
+        type = "user"
         isOpen={isModalOpen}
         user={editingUser}
         onClose={() => setIsModalOpen(false)}

@@ -1,11 +1,11 @@
 import { PAGINATION_LIMIT } from "@/constants/app.constants";
-import { GetAllUsersResponse } from "@/types/user.type";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { getAllUsersEndpoint } from "../user/user.endpoint";
+import { GetAllUsersRes } from "@/types/user.type";
 
 
-export const useGetAllUsersQuery = (page: number, initialData: GetAllUsersResponse) => {
-    return useQuery<GetAllUsersResponse>({
+export const useGetAllUsersQuery = (page: number, initialData: GetAllUsersRes): UseQueryResult<GetAllUsersRes, unknown> => {
+    return useQuery({
         queryKey: ['users', page],
         queryFn: () => getAllUsersEndpoint(page, PAGINATION_LIMIT),
         placeholderData: (prev) => prev,

@@ -44,13 +44,6 @@ export const Header = () => {
             <nav className="flex gap-4 items-center">
                 {!isAuthPage && (
                     <>
-                        {isVehiclePage && (
-                            <CustomBtn 
-                                label="Create Vehicle" 
-                                onClick={() => router.push('/vehicles/create')} 
-                                style="w-40"
-                            />
-                        )}
                         {isUserPage && (
                             <CustomBtn 
                                 label="Create User" 

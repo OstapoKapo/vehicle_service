@@ -9,7 +9,7 @@ const UserPage = async ({ params }: { params: { id: string } }) => {
     try{
         console.log("Fetching user with id:", id);
         const res = await getUserByIdEndpoint( id);
-        user = res.user;
+        user = res.data;
         return (
             <UserContainer user={user} />
         );

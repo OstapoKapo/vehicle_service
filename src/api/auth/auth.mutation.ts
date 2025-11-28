@@ -12,8 +12,9 @@ export const useLoginMutation = (): UseMutationResult<
   const router = useRouter();
   return useMutation({
     mutationFn: (data) => loginEndpoint(data),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success(data.message);
+      await new Promise((res) => setTimeout(res, 150));
       router.push("/");
     },
   });

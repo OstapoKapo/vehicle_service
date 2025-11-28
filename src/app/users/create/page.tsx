@@ -3,14 +3,14 @@
 import { useCreateUserMutation } from "@/api/user/user.mutation";
 import { CustomForm } from "@/components/custom/customForm.component";
 import {getRegistrationFormConfig} from "@/configs/signup.config";
-import { CreateUserRequest } from "@/types/user.type";
+import { CreateUserReq } from "@/types/user.type";
 import { useState } from "react";
 const CreateUserPage = () => {
     const [isAdminKey, setIsAdminKey] = useState(false);
 
     const createMutation = useCreateUserMutation();
 
-    const handleCreateUser = async (data: CreateUserRequest) => {
+    const handleCreateUser = async (data: CreateUserReq) => {
         await createMutation.mutateAsync(data);
     }
     return (
