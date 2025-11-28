@@ -8,6 +8,7 @@ const UsersPage = async () => {
     let allUsers: null | GetAllUsersRes = null;
     try{
         const res = await getAllUsersEndpoint(1, PAGINATION_LIMIT);
+        console.log(process.env.INTERNAL_USER_SERVICE_URL);
         allUsers = res;
         return (
             <AllUsersContainer initialData={allUsers} />
