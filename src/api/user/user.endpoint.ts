@@ -25,6 +25,7 @@ export const getAllUsersEndpoint = async (
   page: number,
   limit: number
 ): Promise<GetAllUsersRes> => {
+  console.log(process.env.INTERNAL_USER_SERVICE_URL);
   return getHttp().get<GetAllUsersRes>(`users/?page=${page}&limit=${limit}`);
 };
 
