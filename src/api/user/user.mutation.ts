@@ -36,6 +36,7 @@ export const useCreateUserMutation = (): UseMutationResult<{message: string}, un
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             toast.success(data.message);
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
             router.push('/users');
         }   
     });
