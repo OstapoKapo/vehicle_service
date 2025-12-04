@@ -21,7 +21,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/', req.url));
     } catch (_e) {
       const res = NextResponse.next();
-      res.cookies.set('accessToken', '', { maxAge: 0 });
       return res;
     }
   }

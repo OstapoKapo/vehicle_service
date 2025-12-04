@@ -14,17 +14,7 @@ export const useLoginMutation = (): UseMutationResult<
     mutationFn: (data) => loginEndpoint(data),
     onSuccess: async (data) => {
       toast.success(data.message);
-      const waitForCookie = () =>
-        new Promise<void>((resolve) => {
-          const interval = setInterval(() => {
-            if (document.cookie.includes("token")) {
-              clearInterval(interval);
-              resolve();
-           }
-          }, 50);
-        });
-    await waitForCookie();
-    router.push("/");
+      router.push("/");
     },
   });
 };
